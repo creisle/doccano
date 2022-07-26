@@ -24,6 +24,7 @@ import BaseCard from '@/components/utils/BaseCard.vue'
 import Comment from '@/components/comment/Comment.vue'
 import FormCreate from '@/components/comment/FormCreate.vue'
 import { CommentReadDTO } from '~/services/application/comment/commentData'
+import { UserDTO } from '~/services/application/user/userData'
 
 export default Vue.extend({
   components: {
@@ -41,7 +42,7 @@ export default Vue.extend({
 
   data() {
     return {
-      user: {},
+      user: {} as UserDTO,
       comments: [] as CommentReadDTO[]
     }
   },
@@ -64,7 +65,14 @@ export default Vue.extend({
 
   methods: {
     async list() {
-      this.comments = await this.$services.comment.list(this.$route.params.id, this.exampleId)
+      const comments = await this.$services.comment.list(this.$route.params.id, this.exampleId)
+
+      // only see your own comments unless you are an admin user
+      this.comments = comments.filter(comment => (
+        !this.user.username
+        || this.user.isStaff
+        || comment.username === this.user.username
+      ))
     },
     async add(message: string) {
       await this.$services.comment.create(this.$route.params.id, this.exampleId, message)
