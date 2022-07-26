@@ -31,7 +31,11 @@
           />
         </v-card-title>
         <v-divider />
-        <v-card-text class="title highlight" style="white-space: pre-wrap" v-text="example.text" />
+        <v-card-text
+          class="highlight example-markup"
+          style="white-space: pre-wrap"
+          v-html="exampleHtml"
+        />
       </v-card>
     </template>
     <template #sidebar>
@@ -55,6 +59,10 @@ import { useLabelList } from '@/composables/useLabelList'
 import { useProjectItem } from '@/composables/useProjectItem'
 import { useTeacherList } from '@/composables/useTeacherList'
 import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
+import { marked } from 'marked'
+import DOMPurify from "dompurify"
+
+import '@/assets/style/example.css'
 
 export default {
   components: {
@@ -122,7 +130,13 @@ export default {
       enableAutoLabeling,
       labelComponent,
       removeTeacher,
-      shortKeys
+      shortKeys,
+      marked
+    }
+  },
+  computed: {
+    exampleHtml() {
+      return DOMPurify.sanitize(marked.parse(this.example.text))
     }
   }
 }
