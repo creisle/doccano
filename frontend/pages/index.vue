@@ -14,7 +14,7 @@ import TheTopBanner from '@/components/layout/TheTopBanner'
 export default {
   components: {
     FeatureCards,
-    TheTopBanner,
+    TheTopBanner
     // TheBottomBanner
   }
 }

@@ -85,7 +85,7 @@ import TheColorModeSwitcher from './TheColorModeSwitcher'
 
 export default {
   components: {
-    TheColorModeSwitcher,
+    TheColorModeSwitcher
     // LocaleMenu
   },
 

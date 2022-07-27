@@ -1,18 +1,15 @@
 <template>
   <v-card>
-    <v-card-title>
-      Welcome to the {{project.name}} project
-    </v-card-title>
+    <v-card-title> Welcome to the {{ project.name }} project </v-card-title>
     <v-card-text
-        class="highlight example-markup"
-        style="white-space: pre-wrap"
-        v-html="guidelineHtml"
+      class="highlight example-markup"
+      style="white-space: pre-wrap"
+      v-html="guidelineHtml"
     />
   </v-card>
 </template>
 
 <script>
-
 import { toRefs, useContext } from '@nuxtjs/composition-api'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
@@ -26,16 +23,16 @@ export default {
   },
 
   setup() {
-    const {  params } = useContext()
+    const { params } = useContext()
     const projectId = params.value.id
     const { state: projectState, getProjectById } = useProjectItem()
     getProjectById(projectId)
-    return {...toRefs(projectState), projectId}
+    return { ...toRefs(projectState), projectId }
   },
   computed: {
     guidelineHtml() {
       console.log(this.project)
-      return DOMPurify.sanitize(marked.parse(this.project.guideline || ""))
+      return DOMPurify.sanitize(marked.parse(this.project.guideline || ''))
     }
   },
   methods: {
