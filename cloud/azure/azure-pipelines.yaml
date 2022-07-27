@@ -37,7 +37,7 @@ steps:
 # Additionally, to configure the deployment, set the following pipeline variables:
 # - doccano_admin_username
 # - doccano_admin_password
-# - doccano_admin_contact_email
+# - doccano_ADMIN_EMAIL
 # - doccano_app_name (globally unique name for the app)
 # - doccano_secret_key (pass-through secret for Django)
 # - doccano_resource_group (group for all resources, will be created if it doesn't yet exist)
