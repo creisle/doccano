@@ -15,5 +15,5 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - run: docker build --file docker/Dockerfile --tag creisle/doccano:latest .
-      - run: docker push creisle/doccano:latest
+      - run: docker build --file docker/Dockerfile --tag creisle/doccano:master .
+      - run: docker push creisle/doccano:master

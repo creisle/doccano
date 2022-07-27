@@ -1,1 +1,1 @@
-FROM creisle/doccano:latest
+FROM creisle/doccano:master
