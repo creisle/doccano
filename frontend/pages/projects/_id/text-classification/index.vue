@@ -60,7 +60,7 @@ import { useProjectItem } from '@/composables/useProjectItem'
 import { useTeacherList } from '@/composables/useTeacherList'
 import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
 import { marked } from 'marked'
-import DOMPurify from "dompurify"
+import DOMPurify from 'dompurify'
 
 import '@/assets/style/example.css'
 

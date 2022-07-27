@@ -68,11 +68,10 @@ export default Vue.extend({
       const comments = await this.$services.comment.list(this.$route.params.id, this.exampleId)
 
       // only see your own comments unless you are an admin user
-      this.comments = comments.filter(comment => (
-        !this.user.username
-        || this.user.isStaff
-        || comment.username === this.user.username
-      ))
+      this.comments = comments.filter(
+        (comment) =>
+          !this.user.username || this.user.isStaff || comment.username === this.user.username
+      )
     },
     async add(message: string) {
       await this.$services.comment.create(this.$route.params.id, this.exampleId, message)
