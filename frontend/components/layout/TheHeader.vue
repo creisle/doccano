@@ -20,7 +20,7 @@
     </v-btn>
     <div class="flex-grow-1" />
     <the-color-mode-switcher />
-    <locale-menu />
+    <!-- <locale-menu /> -->
     <v-btn
       v-if="isAuthenticated"
       text
@@ -29,7 +29,7 @@
     >
       {{ $t('header.projects') }}
     </v-btn>
-    <v-menu v-if="!isAuthenticated" open-on-hover offset-y>
+    <!-- <v-menu v-if="!isAuthenticated" open-on-hover offset-y>
       <template #activator="{ on }">
         <v-btn text v-on="on">
           {{ $t('home.demoDropDown') }}
@@ -45,7 +45,7 @@
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
-    </v-menu>
+    </v-menu> -->
     <v-btn v-if="!isAuthenticated" outlined @click="$router.push(localePath('/auth'))">
       {{ $t('user.login') }}
     </v-btn>
@@ -81,12 +81,12 @@
 import { mdiLogout, mdiDotsVertical, mdiMenuDown, mdiHexagonMultiple } from '@mdi/js'
 import { mapGetters, mapActions } from 'vuex'
 import TheColorModeSwitcher from './TheColorModeSwitcher'
-import LocaleMenu from './LocaleMenu'
+// import LocaleMenu from './LocaleMenu'
 
 export default {
   components: {
     TheColorModeSwitcher,
-    LocaleMenu
+    // LocaleMenu
   },
 
   data() {
