@@ -1,8 +1,6 @@
 name: ci
 
 on:
-  schedule:
-    - cron: '0 10 * * *' # everyday at 10am
   push:
     branches:
       - master
@@ -21,7 +19,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: doccano/doccano
+          images: creisle/doccano
           tag-sha: true
           tag-semver: |
             {{version}}
