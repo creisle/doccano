@@ -20,11 +20,11 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import BaseCard from '@/components/utils/BaseCard.vue'
 import Comment from '@/components/comment/Comment.vue'
 import FormCreate from '@/components/comment/FormCreate.vue'
-import { CommentReadDTO } from '~/services/application/comment/commentData'
-import { UserDTO } from '~/services/application/user/userData'
+import BaseCard from '@/components/utils/BaseCard.vue'
+import { CommentItem } from '~/domain/models/comment/comment'
+import { UserItem } from '~/domain/models/user/user'
 
 export default Vue.extend({
   components: {
@@ -42,8 +42,8 @@ export default Vue.extend({
 
   data() {
     return {
-      user: {} as UserDTO,
-      comments: [] as CommentReadDTO[]
+      user: {} as UserItem,
+      comments: [] as CommentItem[]
     }
   },
 
@@ -60,12 +60,12 @@ export default Vue.extend({
   },
 
   async created() {
-    this.user = await this.$services.user.getMyProfile()
+    this.user = await this.$repositories.user.getProfile()
   },
 
   methods: {
     async list() {
-      const comments = await this.$services.comment.list(this.$route.params.id, this.exampleId)
+      const comments = await this.$repositories.comment.list(this.$route.params.id, this.exampleId)
 
       // only see your own comments unless you are an admin user
       this.comments = comments.filter(
@@ -74,15 +74,15 @@ export default Vue.extend({
       )
     },
     async add(message: string) {
-      await this.$services.comment.create(this.$route.params.id, this.exampleId, message)
+      await this.$repositories.comment.create(this.$route.params.id, this.exampleId, message)
       this.list()
     },
-    async remove(item: CommentReadDTO) {
-      await this.$services.comment.delete(this.$route.params.id, item)
+    async remove(item: CommentItem) {
+      await this.$repositories.comment.delete(this.$route.params.id, item)
       this.list()
     },
-    async maybeUpdate(item: CommentReadDTO) {
-      await this.$services.comment.update(this.$route.params.id, item)
+    async maybeUpdate(item: CommentItem) {
+      await this.$repositories.comment.update(this.$route.params.id, item)
       this.list()
     }
   }

@@ -2,10 +2,13 @@ from rest_framework import serializers
 from rest_polymorphic.serializers import PolymorphicSerializer
 
 from .models import (
+    BoundingBoxProject,
+    ImageCaptioningProject,
     ImageClassificationProject,
     IntentDetectionAndSlotFillingProject,
     Member,
     Project,
+    SegmentationProject,
     Seq2seqProject,
     SequenceLabelingProject,
     Speech2textProject,
@@ -46,6 +49,13 @@ class TagSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, required=False)
+    author = serializers.SerializerMethodField()
+
+    @classmethod
+    def get_author(cls, instance):
+        if instance.created_by:
+            return instance.created_by.username
+        return ""
 
     class Meta:
         model = Project
@@ -55,25 +65,20 @@ class ProjectSerializer(serializers.ModelSerializer):
             "description",
             "guideline",
             "project_type",
+            "created_at",
             "updated_at",
             "random_order",
-            "created_by",
+            "author",
             "collaborative_annotation",
             "single_class_classification",
             "is_text_project",
-            "can_define_label",
-            "can_define_relation",
-            "can_define_category",
-            "can_define_span",
             "tags",
         ]
         read_only_fields = (
+            "created_at",
             "updated_at",
+            "author",
             "is_text_project",
-            "can_define_label",
-            "can_define_relation",
-            "can_define_category",
-            "can_define_span",
         )
 
     def create(self, validated_data):
@@ -118,6 +123,21 @@ class Speech2textProjectSerializer(ProjectSerializer):
 class ImageClassificationProjectSerializer(ProjectSerializer):
     class Meta(ProjectSerializer.Meta):
         model = ImageClassificationProject
+
+
+class BoundingBoxProjectSerializer(ProjectSerializer):
+    class Meta(ProjectSerializer.Meta):
+        model = BoundingBoxProject
+
+
+class SegmentationProjectSerializer(ProjectSerializer):
+    class Meta(ProjectSerializer.Meta):
+        model = SegmentationProject
+
+
+class ImageCaptioningProjectSerializer(ProjectSerializer):
+    class Meta(ProjectSerializer.Meta):
+        model = ImageCaptioningProject
 
 
 class ProjectPolymorphicSerializer(PolymorphicSerializer):

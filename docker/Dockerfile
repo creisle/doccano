@@ -1,5 +1,5 @@
-ARG PYTHON_VERSION="3.8.12-slim-buster"
-ARG NODE_VERSION="16.14-buster-slim"
+ARG PYTHON_VERSION="3.8.13-slim-bullseye"
+ARG NODE_VERSION="16.16-bullseye-slim"
 FROM node:${NODE_VERSION} AS frontend-builder
 
 COPY frontend/ /frontend/
@@ -9,7 +9,7 @@ ENV PUBLIC_PATH="/static/_nuxt/"
 RUN apt-get update \
  && apt-get install -y --no-install-recommends git python3 make g++ ca-certificates \
  && git config --global url."https://github.com/".insteadOf git://github.com/ \
- && yarn install \
+ && yarn install --network-timeout 1000000 \
  && yarn build \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
@@ -20,7 +20,7 @@ FROM python:${PYTHON_VERSION} AS backend-builder
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
     netcat=1.* \
-    libpq-dev=11.* \
+    libpq-dev=13.* \
     unixodbc-dev=2.* \
     g++=4:* \
     libssl-dev=1.* \
@@ -32,9 +32,9 @@ WORKDIR /tmp
 COPY backend/pyproject.toml backend/poetry.lock /tmp/
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN pip install --no-cache-dir pip==22.0.4 \
- && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - \
- && PATH="${PATH}:$HOME/.poetry/bin" \
+RUN pip install -U --no-cache-dir pip==22.2.2 \
+ && curl -sSL https://install.python-poetry.org | python - \
+ && export PATH="/root/.local/bin:$PATH" \
  && poetry export --without-hashes -o /requirements.txt \
  && echo "psycopg2-binary==2.8.6" >> /requirements.txt \
  && echo "django-heroku==0.3.1" >> /requirements.txt \
@@ -44,7 +44,7 @@ FROM python:${PYTHON_VERSION} AS runtime
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-    libpq-dev=11.* \
+    libpq-dev=13.* \
     unixodbc-dev=2.* \
     libssl-dev=1.* \
  && apt-get clean \

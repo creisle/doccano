@@ -24,8 +24,8 @@
             :entity-labels="spanTypes"
             :relations="relations"
             :relation-labels="relationTypes"
-            :allow-overlapping="project.allowOverlapping"
-            :grapheme-mode="project.graphemeMode"
+            :allow-overlapping="project.allowOverlappingSpans"
+            :grapheme-mode="project.enableGraphemeMode"
             :selected-label="selectedLabel"
             :relation-mode="relationMode"
             @addEntity="addSpan"
@@ -41,36 +41,44 @@
     <template #sidebar>
       <annotation-progress :progress="progress" />
       <v-card class="mt-4">
-        <v-card-title>Label Types</v-card-title>
-        <v-card-text>
-          <v-switch v-if="useRelationLabeling" v-model="relationMode">
-            <template #label>
-              <span v-if="relationMode">Relation</span>
-              <span v-else>Span</span>
-            </template>
-          </v-switch>
-          <v-chip-group v-model="selectedLabelIndex" column>
-            <v-chip
-              v-for="(item, index) in labelTypes"
-              :key="item.id"
-              v-shortkey="[item.suffixKey]"
-              :color="item.backgroundColor"
-              filter
-              :text-color="$contrastColor(item.backgroundColor)"
-              @shortkey="selectedLabelIndex = index"
-            >
-              {{ item.text }}
-              <v-avatar
-                v-if="item.suffixKey"
-                right
-                color="white"
-                class="black--text font-weight-bold"
+        <v-card-title>
+          Label Types
+          <v-spacer />
+          <v-btn icon @click="showLabelTypes = !showLabelTypes">
+            <v-icon>{{ showLabelTypes ? mdiChevronUp : mdiChevronDown }}</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-expand-transition>
+          <v-card-text v-show="showLabelTypes">
+            <v-switch v-if="useRelationLabeling" v-model="relationMode">
+              <template #label>
+                <span v-if="relationMode">Relation</span>
+                <span v-else>Span</span>
+              </template>
+            </v-switch>
+            <v-chip-group v-model="selectedLabelIndex" column>
+              <v-chip
+                v-for="(item, index) in labelTypes"
+                :key="item.id"
+                v-shortkey="[item.suffixKey]"
+                :color="item.backgroundColor"
+                filter
+                :text-color="$contrastColor(item.backgroundColor)"
+                @shortkey="selectedLabelIndex = index"
               >
-                {{ item.suffixKey }}
-              </v-avatar>
-            </v-chip>
-          </v-chip-group>
-        </v-card-text>
+                {{ item.text }}
+                <v-avatar
+                  v-if="item.suffixKey"
+                  right
+                  color="white"
+                  class="black--text font-weight-bold"
+                >
+                  {{ item.suffixKey }}
+                </v-avatar>
+              </v-chip>
+            </v-chip-group>
+          </v-card-text>
+        </v-expand-transition>
       </v-card>
       <list-metadata :metadata="doc.meta" class="mt-4" />
     </template>
@@ -78,14 +86,15 @@
 </template>
 
 <script>
+import { mdiChevronDown, mdiChevronUp } from '@mdi/js'
 import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import LayoutText from '@/components/tasks/layout/LayoutText'
 import ListMetadata from '@/components/tasks/metadata/ListMetadata'
-import ToolbarLaptop from '@/components/tasks/toolbar/ToolbarLaptop'
-import ToolbarMobile from '@/components/tasks/toolbar/ToolbarMobile'
 import EntityEditor from '@/components/tasks/sequenceLabeling/EntityEditor.vue'
 import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
+import ToolbarLaptop from '@/components/tasks/toolbar/ToolbarLaptop'
+import ToolbarMobile from '@/components/tasks/toolbar/ToolbarMobile'
 
 export default {
   components: {
@@ -115,7 +124,10 @@ export default {
       rtl: false,
       selectedLabelIndex: null,
       progress: {},
-      relationMode: false
+      relationMode: false,
+      showLabelTypes: true,
+      mdiChevronUp,
+      mdiChevronDown
     }
   },
 
@@ -124,10 +136,11 @@ export default {
       this.projectId,
       this.$route.query.page,
       this.$route.query.q,
-      this.$route.query.isChecked
+      this.$route.query.isChecked,
+      this.$route.query.ordering
     )
     const doc = this.docs.items[0]
-    if (this.enableAutoLabeling) {
+    if (this.enableAutoLabeling && !doc.isConfirmed) {
       await this.autoLabel(doc.id)
     }
     await this.list(doc.id)
@@ -180,9 +193,10 @@ export default {
 
   watch: {
     '$route.query': '$fetch',
-    enableAutoLabeling(val) {
-      if (val) {
-        this.list(this.doc.id)
+    async enableAutoLabeling(val) {
+      if (val && !this.doc.isConfirmed) {
+        await this.autoLabel(this.doc.id)
+        await this.list(this.doc.id)
       }
     }
   },
@@ -191,7 +205,7 @@ export default {
     this.spanTypes = await this.$services.spanType.list(this.projectId)
     this.relationTypes = await this.$services.relationType.list(this.projectId)
     this.project = await this.$services.project.findById(this.projectId)
-    this.progress = await this.$services.metrics.fetchMyProgress(this.projectId)
+    this.progress = await this.$repositories.metrics.fetchMyProgress(this.projectId)
   },
 
   methods: {
@@ -279,7 +293,7 @@ export default {
     },
 
     async updateProgress() {
-      this.progress = await this.$services.metrics.fetchMyProgress(this.projectId)
+      this.progress = await this.$repositories.metrics.fetchMyProgress(this.projectId)
     },
 
     async confirm() {

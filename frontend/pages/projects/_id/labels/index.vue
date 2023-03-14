@@ -37,8 +37,8 @@ import Vue from 'vue'
 import ActionMenu from '@/components/label/ActionMenu.vue'
 import FormDelete from '@/components/label/FormDelete.vue'
 import LabelList from '@/components/label/LabelList.vue'
+import { Project } from '~/domain/models/project/project'
 import { LabelDTO } from '~/services/application/label/labelData'
-import { ProjectDTO } from '~/services/application/project/projectData'
 
 export default Vue.extend({
   components: {
@@ -50,7 +50,7 @@ export default Vue.extend({
 
   validate({ params, app }) {
     if (/^\d+$/.test(params.id)) {
-      return app.$services.project.findById(params.id).then((res: ProjectDTO) => {
+      return app.$services.project.findById(params.id).then((res: Project) => {
         return res.canDefineLabel
       })
     }
@@ -64,7 +64,7 @@ export default Vue.extend({
       selected: [] as LabelDTO[],
       isLoading: false,
       tab: 0,
-      project: {} as ProjectDTO
+      project: {} as Project
     }
   },
 
@@ -96,7 +96,7 @@ export default Vue.extend({
         } else {
           return ['span', 'relation'][this.tab!]
         }
-      } else if (this.project.projectType.endsWith('Classification')) {
+      } else if (this.project.canDefineCategory) {
         return 'category'
       } else {
         return 'span'
@@ -113,7 +113,7 @@ export default Vue.extend({
         } else {
           return [this.$services.spanType, this.$services.relationType][this.tab!]
         }
-      } else if (this.project.projectType.endsWith('Classification')) {
+      } else if (this.project.canDefineCategory) {
         return this.$services.categoryType
       } else {
         return this.$services.spanType

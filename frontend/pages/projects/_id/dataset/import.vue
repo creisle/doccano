@@ -47,6 +47,12 @@
       >
         <pre>{{ example }}</pre>
       </v-sheet>
+      <div v-if="selected === 'JSONL(Relation)'">
+        <p class="body-1">For readability, the above format can be displayed as follows:</p>
+        <v-sheet :dark="!$vuetify.theme.dark" :light="$vuetify.theme.dark" class="mb-5 pa-5">
+          <pre>{{ JSON.stringify(JSON.parse(example.replaceAll("'", '"')), null, 4) }}</pre>
+        </v-sheet>
+      </div>
       <file-pond
         v-if="selected && acceptedFileTypes !== '*'"
         ref="pond"
@@ -86,10 +92,10 @@
 </template>
 
 <script>
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
+import 'filepond/dist/filepond.min.css'
 import Cookies from 'js-cookie'
 import vueFilePond from 'vue-filepond'
-import 'filepond/dist/filepond.min.css'
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 const FilePond = vueFilePond(FilePondPluginFileValidateType)
 
 export default {
@@ -196,7 +202,7 @@ export default {
       }
       this.myFiles = []
       for (const file of this.uploadedFiles) {
-        this.$services.parse.revert(file.serverId)
+        this.$repositories.parse.revert(file.serverId)
       }
       this.uploadedFiles = []
       this.errors = []
@@ -204,7 +210,7 @@ export default {
   },
 
   async created() {
-    this.catalog = await this.$services.catalog.list(this.$route.params.id)
+    this.catalog = await this.$repositories.catalog.list(this.$route.params.id)
     this.pollData()
   },
 
@@ -229,7 +235,7 @@ export default {
     async importDataset() {
       this.isImporting = true
       const item = this.catalog.find((item) => item.displayName === this.selected)
-      this.taskId = await this.$services.parse.analyze(
+      this.taskId = await this.$repositories.parse.analyze(
         this.$route.params.id,
         item.name,
         item.taskId,
@@ -240,7 +246,7 @@ export default {
     pollData() {
       this.polling = setInterval(async () => {
         if (this.taskId) {
-          const res = await this.$services.taskStatus.get(this.taskId)
+          const res = await this.$repositories.taskStatus.get(this.taskId)
           if (res.ready) {
             this.taskId = null
             this.errors = res.result.error

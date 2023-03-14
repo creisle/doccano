@@ -46,23 +46,24 @@
 </template>
 
 <script>
-import { toRefs, useContext, useFetch, ref, watch } from '@nuxtjs/composition-api'
-import LabelGroup from '@/components/tasks/textClassification/LabelGroup'
-import LabelSelect from '@/components/tasks/textClassification/LabelSelect'
+import { ref, toRefs, useContext, useFetch, watch } from '@nuxtjs/composition-api'
 import LayoutText from '@/components/tasks/layout/LayoutText'
 import ListMetadata from '@/components/tasks/metadata/ListMetadata'
+import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
+import LabelGroup from '@/components/tasks/textClassification/LabelGroup'
+import LabelSelect from '@/components/tasks/textClassification/LabelSelect'
+import ButtonLabelSwitch from '@/components/tasks/toolbar/buttons/ButtonLabelSwitch'
 import ToolbarLaptop from '@/components/tasks/toolbar/ToolbarLaptop'
 import ToolbarMobile from '@/components/tasks/toolbar/ToolbarMobile'
-import ButtonLabelSwitch from '@/components/tasks/toolbar/buttons/ButtonLabelSwitch'
 import { useExampleItem } from '@/composables/useExampleItem'
 import { useLabelList } from '@/composables/useLabelList'
 import { useProjectItem } from '@/composables/useProjectItem'
 import { useTeacherList } from '@/composables/useTeacherList'
-import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 
 import '@/assets/style/example.css'
+
 
 export default {
   components: {
@@ -94,7 +95,7 @@ export default {
       clearTeacherList,
       getTeacherList,
       removeTeacher
-    } = useTeacherList(app.$services.textClassification)
+    } = useTeacherList(app.$repositories.category)
     const enableAutoLabeling = ref(false)
     const { state: labelState, getLabelList, shortKeys } = useLabelList(app.$services.categoryType)
     const labelComponent = ref('label-group')
@@ -117,6 +118,12 @@ export default {
       }
     })
     watch(query, fetch)
+    watch(enableAutoLabeling, async (val) => {
+      if (val && !exampleState.example.isConfirmed) {
+        await autoLabel(exampleState.example.id)
+        await getTeacherList(exampleState.example.id)
+      }
+    })
 
     return {
       ...toRefs(labelState),

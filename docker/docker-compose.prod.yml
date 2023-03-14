@@ -2,10 +2,7 @@ version: "3.7"
 services:
 
   backend:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.prod
-    image: doccano_backend:prod
+    image: doccano/doccano:backend
     volumes:
       - static_volume:/backend/staticfiles
       - media:/backend/media
@@ -26,10 +23,7 @@ services:
       - network-frontend
 
   celery:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.prod
-    image: doccano_celery:prod
+    image: doccano/doccano:backend
     volumes:
       - media:/backend/media
       - tmp_file:/backend/filepond-temp-uploads
@@ -45,8 +39,25 @@ services:
     networks:
       - network-backend
 
+  flower:
+    image: doccano/doccano:backend
+    entrypoint: ["/opt/bin/prod-flower.sh"]
+    environment:
+      PYTHONUNBUFFERED: "1"
+      CELERY_BROKER_URL: "amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq"
+      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable"
+      DJANGO_SETTINGS_MODULE: "config.settings.production"
+      FLOWER_BASIC_AUTH: "${FLOWER_BASIC_AUTH}" # Format "username:password"
+    depends_on:
+      - celery
+    ports:
+      - 5555:5555
+    networks:
+      - network-backend
+      - network-frontend
+
   rabbitmq:
-    image: rabbitmq:3.8-alpine
+    image: rabbitmq:3.10.7-alpine
     environment:
       RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
       RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
@@ -56,12 +67,18 @@ services:
       - network-backend
 
   nginx:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.nginx
+    image: doccano/doccano:frontend
+    command: >
+      /bin/sh -c
+      "envsubst '
+      $${WORKER_PROCESSES}
+      '< /etc/nginx/nginx.conf.template
+      > /etc/nginx/nginx.conf
+      && nginx -g 'daemon off;'"
     environment:
       API_URL: "http://backend:8000"
       GOOGLE_TRACKING_ID: ""
+      WORKER_PROCESSES: "auto"
     volumes:
       - static_volume:/static
       - media:/media

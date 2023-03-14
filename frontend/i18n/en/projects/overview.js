@@ -5,6 +5,7 @@ export default {
   textClassification: 'Text Classification',
   sequenceLabeling: 'Sequence Labeling',
   sequenceToSequence: 'Sequence to sequence',
+  allowSingleLabel: 'Allow single label',
   randomizeDocOrder: 'Randomize document order',
   shareAnnotations: 'Share annotations across all users',
   delete: 'Delete',
@@ -17,6 +18,9 @@ export default {
     'Sequence to sequence',
     'Intent Detection and Slot Filling',
     'Image Classification',
+    'Image Captioning',
+    'Object Detection',
+    'Segmentation',
     'Speech to Text'
   ]
 }

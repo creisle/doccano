@@ -36,9 +36,9 @@
 import _ from 'lodash'
 import LayoutText from '@/components/tasks/layout/LayoutText'
 import ListMetadata from '@/components/tasks/metadata/ListMetadata'
+import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
 import ToolbarLaptop from '@/components/tasks/toolbar/ToolbarLaptop'
 import ToolbarMobile from '@/components/tasks/toolbar/ToolbarMobile'
-import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
 import Seq2seqBox from '~/components/tasks/seq2seq/Seq2seqBox'
 
 export default {
@@ -71,7 +71,8 @@ export default {
       this.projectId,
       this.$route.query.page,
       this.$route.query.q,
-      this.$route.query.isChecked
+      this.$route.query.isChecked,
+      this.$route.query.ordering
     )
     const doc = this.docs.items[0]
     if (this.enableAutoLabeling) {
@@ -95,16 +96,17 @@ export default {
 
   watch: {
     '$route.query': '$fetch',
-    enableAutoLabeling(val) {
-      if (val) {
-        this.list(this.doc.id)
+    async enableAutoLabeling(val) {
+      if (val && !this.doc.isConfirmed) {
+        await this.autoLabel(this.doc.id)
+        await this.list(this.doc.id)
       }
     }
   },
 
   async created() {
     this.project = await this.$services.project.findById(this.projectId)
-    this.progress = await this.$services.metrics.fetchMyProgress(this.projectId)
+    this.progress = await this.$$repositories.metrics.fetchMyProgress(this.projectId)
   },
 
   methods: {
@@ -141,7 +143,7 @@ export default {
     },
 
     async updateProgress() {
-      this.progress = await this.$services.metrics.fetchMyProgress(this.projectId)
+      this.progress = await this.$repositories.metrics.fetchMyProgress(this.projectId)
     },
 
     async confirm() {

@@ -14,6 +14,9 @@ SEQUENCE_LABELING = "SequenceLabeling"
 SEQ2SEQ = "Seq2seq"
 SPEECH2TEXT = "Speech2text"
 IMAGE_CLASSIFICATION = "ImageClassification"
+BOUNDING_BOX = "BoundingBox"
+SEGMENTATION = "Segmentation"
+IMAGE_CAPTIONING = "ImageCaptioning"
 INTENT_DETECTION_AND_SLOT_FILLING = "IntentDetectionAndSlotFilling"
 PROJECT_CHOICES = (
     (DOCUMENT_CLASSIFICATION, "document classification"),
@@ -22,6 +25,9 @@ PROJECT_CHOICES = (
     (INTENT_DETECTION_AND_SLOT_FILLING, "intent detection and slot filling"),
     (SPEECH2TEXT, "speech to text"),
     (IMAGE_CLASSIFICATION, "image classification"),
+    (BOUNDING_BOX, "bounding box"),
+    (SEGMENTATION, "segmentation"),
+    (IMAGE_CAPTIONING, "image captioning"),
 )
 
 
@@ -54,26 +60,6 @@ class Project(PolymorphicModel):
     def is_text_project(self) -> bool:
         return False
 
-    @property
-    def can_define_label(self) -> bool:
-        """Whether or not the project can define label(ignoring the type of label)"""
-        return False
-
-    @property
-    def can_define_relation(self) -> bool:
-        """Whether or not the project can define relation."""
-        return False
-
-    @property
-    def can_define_category(self) -> bool:
-        """Whether or not the project can define category."""
-        return False
-
-    @property
-    def can_define_span(self) -> bool:
-        """Whether or not the project can define span."""
-        return False
-
     def __str__(self):
         return self.name
 
@@ -81,14 +67,6 @@ class Project(PolymorphicModel):
 class TextClassificationProject(Project):
     @property
     def is_text_project(self) -> bool:
-        return True
-
-    @property
-    def can_define_label(self) -> bool:
-        return True
-
-    @property
-    def can_define_category(self) -> bool:
         return True
 
 
@@ -99,14 +77,6 @@ class SequenceLabelingProject(Project):
 
     @property
     def is_text_project(self) -> bool:
-        return True
-
-    @property
-    def can_define_label(self) -> bool:
-        return True
-
-    @property
-    def can_define_span(self) -> bool:
         return True
 
 
@@ -121,18 +91,6 @@ class IntentDetectionAndSlotFillingProject(Project):
     def is_text_project(self) -> bool:
         return True
 
-    @property
-    def can_define_label(self) -> bool:
-        return True
-
-    @property
-    def can_define_category(self) -> bool:
-        return True
-
-    @property
-    def can_define_span(self) -> bool:
-        return True
-
 
 class Speech2textProject(Project):
     @property
@@ -145,13 +103,23 @@ class ImageClassificationProject(Project):
     def is_text_project(self) -> bool:
         return False
 
-    @property
-    def can_define_label(self) -> bool:
-        return True
 
+class BoundingBoxProject(Project):
     @property
-    def can_define_category(self) -> bool:
-        return True
+    def is_text_project(self) -> bool:
+        return False
+
+
+class SegmentationProject(Project):
+    @property
+    def is_text_project(self) -> bool:
+        return False
+
+
+class ImageCaptioningProject(Project):
+    @property
+    def is_text_project(self) -> bool:
+        return False
 
 
 class Tag(models.Model):

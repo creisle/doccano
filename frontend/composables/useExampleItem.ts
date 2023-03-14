@@ -1,5 +1,5 @@
-import _ from 'lodash'
 import { reactive, useContext } from '@nuxtjs/composition-api'
+import _ from 'lodash'
 import { ExampleDTO } from '@/services/application/example/exampleData'
 
 export const useExampleItem = () => {
@@ -14,9 +14,14 @@ export const useExampleItem = () => {
 
   const getExample = async (
     projectId: string,
-    { page, q, isChecked }: { page: string; q: string; isChecked: string }
+    {
+      page,
+      q,
+      isChecked,
+      ordering
+    }: { page: string; q: string; isChecked: string; ordering: string }
   ) => {
-    const examples = await exampleService.fetchOne(projectId, page, q, isChecked)
+    const examples = await exampleService.fetchOne(projectId, page, q, isChecked, ordering)
     state.totalExample = examples.count
     if (!_.isEmpty(examples) && examples.items.length !== 0) {
       state.example = examples.items[0]
@@ -28,7 +33,7 @@ export const useExampleItem = () => {
   }
 
   const updateProgress = async (projectId: string) => {
-    state.progress = await app.$services.metrics.fetchMyProgress(projectId)
+    state.progress = await app.$repositories.metrics.fetchMyProgress(projectId)
   }
 
   const confirm = async (projectId: string) => {

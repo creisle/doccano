@@ -76,9 +76,25 @@ Please check the following list.
 
 ## I want to change port number
 
-On production, edit `docker-compose.prod.yml` file: change `80:80` substring in `nginx`/`ports` section to `<your_port>:80`.
+In the case of Docker Compose, you can change the port number by editing `docker-compose.prod.yml`. First, you change `80:8080` to `<your_port>:8080` in `nginx`/`ports` section as follows:
 
-On development, edit `docker-compose.dev.yml` file: change `8000:8000` substring in `backend`/`ports` section to `<your_port>:8000`.
+```yaml
+nginx:
+  image: doccano/doccano:frontend
+  ports:
+    - <your_port>:8080
+```
+
+Then, you need to add `CSRF_TRUSTED_ORIGINS` environment variable to `backend`/`environment` section as follows:
+
+```yaml
+backend:
+    image: doccano/doccano:backend
+    environment:
+      ...
+      DJANGO_SETTINGS_MODULE: "config.settings.production"
+      CSRF_TRUSTED_ORIGINS: "http://127.0.0.1:<your_port>"
+```
 
 ## I want to update to the latest doccano image
 
@@ -89,7 +105,7 @@ On development, edit `docker-compose.dev.yml` file: change `8000:8000` substring
 
 The following commands are the procedure for 2~3.
 
-```
+```bash
 ❯ docker volume ls
 DRIVER              VOLUME NAME
 local               doccano_node_modules
@@ -99,4 +115,25 @@ local               doccano_venv
 local               doccano_www
 ❯ docker volume rm doccano_node_modules doccano_static_volume doccano_venv doccano_www
 ❯ docker-compose -f docker-compose.prod.yml build --no-cache
+```
+
+## django.db.utils.OperationalError: no such function: JSON_VALID
+
+doccano uses JSONField on SQLite. So you need to enable the JSON1 extension on Python's sqlite3 library. If the extension is not enabled on your installation, a system error will be raised. This is especially related to the user who uses macOS and Python which is less than 3.7, Windows and Python which is less than 3.9.
+
+If you have this problem, please try the following:
+
+- [Enabling JSON1 extension on SQLite](https://code.djangoproject.com/wiki/JSON1Extension)
+
+## CSRF failed
+
+If you have this problem, please set `CSRF_TRUSTED_ORIGINS` environment variable to your domain name. For example, if your domain name is `example.com`, please set `CSRF_TRUSTED_ORIGINS=example.com`. In the debug mode, the default value is `http://127.0.0.1:3000`, `http://0.0.0.0:3000`, and `http://localhost:3000`. If you are using Docker Compose, please set `CSRF_TRUSTED_ORIGINS` in `docker-compose.prod.yml`:
+
+```yaml
+backend:
+    image: doccano/doccano:backend
+    environment:
+      ...
+      DJANGO_SETTINGS_MODULE: "config.settings.production"
+      CSRF_TRUSTED_ORIGINS: "http://192.168.10.3:3000"
 ```

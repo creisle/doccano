@@ -1,138 +1,141 @@
-import 'reflect-metadata'
-import { Expose, Type } from 'class-transformer'
+import { TagItem } from '~/domain/models/tag/tag'
 
-export type ProjectType =
-  | 'DocumentClassification'
-  | 'SequenceLabeling'
-  | 'Seq2seq'
-  | 'IntentDetectionAndSlotFilling'
-  | 'ImageClassification'
-  | 'Speech2text'
+export const DocumentClassification = 'DocumentClassification'
+export const SequenceLabeling = 'SequenceLabeling'
+export const Seq2seq = 'Seq2seq'
+export const IntentDetectionAndSlotFilling = 'IntentDetectionAndSlotFilling'
+export const ImageClassification = 'ImageClassification'
+export const ImageCaptioning = 'ImageCaptioning'
+export const BoundingBox = 'BoundingBox'
+export const Segmentation = 'Segmentation'
+export const Speech2text = 'Speech2text'
 
-export class ProjectReadItem {
-  id: number
+export const allProjectTypes = <const>[
+  DocumentClassification,
+  SequenceLabeling,
+  Seq2seq,
+  IntentDetectionAndSlotFilling,
+  ImageClassification,
+  ImageCaptioning,
+  BoundingBox,
+  Segmentation,
+  Speech2text
+]
+export type ProjectType = (typeof allProjectTypes)[number]
+const MIN_LENGTH = 1
+const MAX_PROJECT_NAME_LENGTH = 100
+
+export const validateMinLength = (text: string): boolean => {
+  return text.trim().length >= MIN_LENGTH
+}
+
+export const validateNameMaxLength = (name: string): boolean => {
+  return name.trim().length <= MAX_PROJECT_NAME_LENGTH
+}
+
+export class Project {
   name: string
   description: string
-  guideline: string
-  users: number[]
-  tags: Object[]
-
-  @Expose({ name: 'project_type' })
   projectType: ProjectType
-
-  @Expose({ name: 'updated_at' })
-  updatedAt: string
-
-  @Expose({ name: 'random_order' })
-  randomOrder: boolean
-
-  @Expose({ name: 'collaborative_annotation' })
-  collaborative_annotation: boolean
-
-  @Expose({ name: 'single_class_classification' })
-  exclusiveCategories: boolean
-
-  @Expose({ name: 'resourcetype' })
-  resourceType: string
-
-  @Expose({ name: 'allow_overlapping' })
-  allowOverlapping: boolean
-
-  @Expose({ name: 'grapheme_mode' })
-  graphemeMode: boolean
-
-  @Expose({ name: 'use_relation' })
-  useRelation: boolean
-
-  @Expose({ name: 'is_text_project' })
-  isTextProject: boolean
-
-  @Expose({ name: 'can_define_label' })
-  canDefineLabel: boolean
-
-  @Expose({ name: 'can_define_relation' })
-  canDefineRelation: boolean
-
-  @Expose({ name: 'can_define_span' })
-  canDefineSpan: boolean
-
-  @Expose({ name: 'can_define_category' })
-  canDefineCategory: boolean
-
-  get annotationPageLink(): string {
-    const mapping = {
-      DocumentClassification: 'text-classification',
-      SequenceLabeling: 'sequence-labeling',
-      Seq2seq: 'sequence-to-sequence',
-      IntentDetectionAndSlotFilling: 'intent-detection-and-slot-filling',
-      ImageClassification: 'image-classification',
-      Speech2text: 'speech-to-text'
+  constructor(
+    readonly id: number,
+    readonly _name: string,
+    readonly _description: string,
+    readonly guideline: string,
+    readonly _projectType: string,
+    readonly enableRandomOrder: boolean,
+    readonly enableSharingMode: boolean,
+    readonly exclusiveCategories: boolean,
+    readonly allowOverlappingSpans: boolean,
+    readonly enableGraphemeMode: boolean,
+    readonly useRelation: boolean,
+    readonly tags: TagItem[],
+    readonly users: number[] = [],
+    readonly createdAt: string = '',
+    readonly updatedAt: string = '',
+    readonly author: string = '',
+    readonly isTextProject: boolean = false
+  ) {
+    if (!validateMinLength(_name)) {
+      throw new Error('Project name is required')
     }
-    const url = `/projects/${this.id}/${mapping[this.projectType]}`
-    return url
+    if (!validateNameMaxLength(_name)) {
+      throw new Error('Project name must be less than 100 characters')
+    }
+    if (!validateMinLength(_description)) {
+      throw new Error('Project description is required')
+    }
+    if (!allProjectTypes.includes(_projectType as ProjectType)) {
+      throw new Error(`Invalid project type: ${_projectType}`)
+    }
+    this.name = _name.trim()
+    this.description = _description.trim()
+    this.projectType = _projectType as ProjectType
+  }
+
+  static create(
+    id: number,
+    name: string,
+    description: string,
+    guideline: string,
+    projectType: string,
+    enableRandomOrder: boolean,
+    enableSharingMode: boolean,
+    exclusiveCategories: boolean,
+    allowOverlappingSpans: boolean,
+    enableGraphemeMode: boolean,
+    useRelation: boolean,
+    tags: TagItem[]
+  ) {
+    return new Project(
+      id,
+      name,
+      description,
+      guideline,
+      projectType,
+      enableRandomOrder,
+      enableSharingMode,
+      exclusiveCategories,
+      allowOverlappingSpans,
+      enableGraphemeMode,
+      useRelation,
+      tags
+    )
+  }
+
+  get canDefineLabel(): boolean {
+    return this.canDefineCategory || this.canDefineSpan
+  }
+
+  get canDefineCategory(): boolean {
+    return [
+      DocumentClassification,
+      IntentDetectionAndSlotFilling,
+      ImageClassification,
+      BoundingBox,
+      Segmentation
+    ].includes(this.projectType)
+  }
+
+  get canDefineSpan(): boolean {
+    return [SequenceLabeling, IntentDetectionAndSlotFilling].includes(this.projectType)
+  }
+
+  get canDefineRelation(): boolean {
+    return this.useRelation
   }
 
   get taskNames(): string[] {
-    if (this.projectType === 'IntentDetectionAndSlotFilling') {
-      return ['DocumentClassification', 'SequenceLabeling']
+    if (this.projectType === IntentDetectionAndSlotFilling) {
+      return [DocumentClassification, SequenceLabeling]
     }
     return [this.projectType]
   }
-}
-
-export class ProjectItemList {
-  count: number
-  next: string | null
-  prev: string | null
-
-  @Type(() => ProjectReadItem)
-  @Expose({ name: 'results' })
-  items: ProjectReadItem[]
-}
-
-export class ProjectWriteItem {
-  constructor(
-    public id: number,
-    public name: string,
-    public description: string,
-    public guideline: string,
-    public project_type: ProjectType,
-    public random_order: boolean,
-    public collaborative_annotation: boolean,
-    public single_class_classification: boolean,
-    public allow_overlapping: boolean,
-    public grapheme_mode: boolean,
-    public use_relation: boolean,
-    public tags: string[]
-  ) {}
 
   get resourceType(): string {
-    const mapping = {
-      DocumentClassification: 'TextClassificationProject',
-      SequenceLabeling: 'SequenceLabelingProject',
-      Seq2seq: 'Seq2seqProject',
-      IntentDetectionAndSlotFilling: 'IntentDetectionAndSlotFillingProject',
-      ImageClassification: 'ImageClassificationProject',
-      Speech2text: 'Speech2textProject'
+    if (this.projectType === DocumentClassification) {
+      return 'TextClassificationProject'
     }
-    return mapping[this.project_type]
-  }
-
-  toObject(): Object {
-    return {
-      id: this.id,
-      name: this.name,
-      description: this.description,
-      guideline: this.guideline,
-      project_type: this.project_type,
-      random_order: this.random_order,
-      collaborative_annotation: this.collaborative_annotation,
-      single_class_classification: this.single_class_classification,
-      allow_overlapping: this.allow_overlapping,
-      grapheme_mode: this.grapheme_mode,
-      use_relation: this.use_relation,
-      tags: this.tags.map((tag) => ({ text: tag })),
-      resourcetype: this.resourceType
-    }
+    return `${this.projectType}Project`
   }
 }

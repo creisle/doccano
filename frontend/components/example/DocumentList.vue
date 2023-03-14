@@ -29,6 +29,11 @@
         filled
       />
     </template>
+    <template #[`item.isConfirmed`]="{ item }">
+      <v-chip :color="item.isConfirmed ? 'success' : 'warning'" text small>
+        {{ item.isConfirmed ? 'Finished' : 'In progress' }}
+      </v-chip>
+    </template>
     <template #[`item.text`]="{ item }">
       <span class="d-flex d-sm-none">{{ item.text | truncate(50) }}</span>
       <span class="d-none d-sm-flex">{{ item.text | truncate(200) }}</span>
@@ -48,8 +53,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
 import { mdiMagnify } from '@mdi/js'
+import type { PropType } from 'vue'
+import Vue from 'vue'
 import { DataOptions } from 'vuetify/types'
 import { ExampleDTO } from '~/services/application/example/exampleData'
 
@@ -91,6 +97,11 @@ export default Vue.extend({
         {
           text: 'ID',
           value: 'id',
+          sortable: false
+        },
+        {
+          text: 'Status',
+          value: 'isConfirmed',
           sortable: false
         },
         {

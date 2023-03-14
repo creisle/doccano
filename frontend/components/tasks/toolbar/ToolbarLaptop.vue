@@ -6,6 +6,8 @@
 
         <button-filter :value="filterOption" @click:filter="changeFilter" />
 
+        <button-order :value="orderOption" @click:order="changeOrder" />
+
         <button-guideline @click:guideline="dialogGuideline = true" />
         <v-dialog v-model="dialogGuideline">
           <form-guideline :guideline-text="guidelineText" @click:close="dialogGuideline = false" />
@@ -36,6 +38,11 @@
             @click:cancel="dialogClear = false"
           />
         </v-dialog>
+
+        <button-keyboard-shortcut @click:open="dialogShortcut = true" />
+        <v-dialog v-model="dialogShortcut">
+          <form-keyboard-shortcut @click:close="dialogShortcut = false" />
+        </v-dialog>
       </v-btn-toggle>
       <slot />
       <v-spacer />
@@ -59,12 +66,15 @@ import ButtonClear from './buttons/ButtonClear.vue'
 import ButtonComment from './buttons/ButtonComment.vue'
 import ButtonFilter from './buttons/ButtonFilter.vue'
 import ButtonGuideline from './buttons/ButtonGuideline.vue'
+import ButtonOrder from './buttons/ButtonOrder.vue'
 import ButtonPagination from './buttons/ButtonPagination.vue'
 import ButtonReview from './buttons/ButtonReview.vue'
+import ButtonKeyboardShortcut from './buttons/ButtonKeyboardShortcut.vue'
 import FormAutoLabeling from './forms/FormAutoLabeling.vue'
 import FormClearLabel from './forms/FormClearLabel.vue'
 import FormComment from './forms/FormComment.vue'
 import FormGuideline from './forms/FormGuideline.vue'
+import FormKeyboardShortcut from './forms/FormKeyboardShortcut.vue'
 
 export default Vue.extend({
   components: {
@@ -73,12 +83,15 @@ export default Vue.extend({
     ButtonComment,
     ButtonFilter,
     ButtonGuideline,
+    ButtonOrder,
+    ButtonKeyboardShortcut,
     ButtonPagination,
     ButtonReview,
     FormAutoLabeling,
     FormClearLabel,
     FormComment,
-    FormGuideline
+    FormGuideline,
+    FormKeyboardShortcut
   },
 
   props: {
@@ -112,6 +125,7 @@ export default Vue.extend({
       dialogClear: false,
       dialogComment: false,
       dialogGuideline: false,
+      dialogShortcut: false,
       errorMessage: ''
     }
   },
@@ -124,6 +138,10 @@ export default Vue.extend({
     filterOption(): string {
       // @ts-ignore
       return this.$route.query.isChecked
+    },
+    orderOption(): string {
+      // @ts-ignore
+      return this.$route.query.ordering
     }
   },
 
@@ -133,6 +151,7 @@ export default Vue.extend({
         query: {
           page: page.toString(),
           isChecked: this.filterOption,
+          ordering: this.$route.query.ordering,
           q: this.$route.query.q
         }
       })
@@ -143,7 +162,19 @@ export default Vue.extend({
         query: {
           page: '1',
           isChecked,
+          ordering: this.$route.query.ordering,
           q: this.$route.query.q
+        }
+      })
+    },
+
+    changeOrder(ordering: string) {
+      this.$router.push({
+        query: {
+          page: '1',
+          isChecked: this.filterOption,
+          q: this.$route.query.q,
+          ordering
         }
       })
     },
@@ -160,6 +191,12 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+.toolbar-control {
+  position: sticky;
+  top: 68px;
+  z-index: 100;
+}
+
 .toolbar-control >>> .v-toolbar__content {
   padding: 0px !important;
 }

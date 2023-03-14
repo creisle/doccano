@@ -15,6 +15,7 @@ Including another URLconf
 """
 import os
 import re
+from pathlib import Path
 
 from django.conf import settings
 from django.contrib import admin
@@ -36,6 +37,7 @@ schema_view = get_schema_view(
 
 urlpatterns = []
 if settings.DEBUG or os.environ.get("STANDALONE", False):
+    static_dir = Path(__file__).resolve().parent.parent / "client" / "dist"
     # For showing images and audios in the case of pip and Docker.
     urlpatterns.append(
         re_path(
@@ -44,10 +46,14 @@ if settings.DEBUG or os.environ.get("STANDALONE", False):
             {"document_root": settings.MEDIA_ROOT},
         )
     )
+    # For showing favicon on the case of pip and Docker.
+    urlpatterns.append(path("favicon.ico", serve, {"document_root": static_dir, "path": "favicon.ico"}))
 
 urlpatterns += [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
+    path("social/", include("social.urls")),
+    path("v1/social/", include("social.v1_urls")),
     path("v1/health/", include("health_check.urls")),
     path("v1/", include("api.urls")),
     path("v1/", include("roles.urls")),

@@ -13,23 +13,19 @@ export default {
   roleRules: {
     roleRequired: 'Rolle wird benötigt'
   },
-  projectNameRules: {
-    projectNameRequired: 'Projektname wird benötigt',
-    projectNameLessThan30Chars: 'Projektname muss kürzer als 30 Zeichen sein'
+  projectName: {
+    required: 'Projektname wird benötigt',
+    maxLength: 'Projektname muss kürzer als 100 Zeichen sein'
   },
-  descriptionRules: {
-    descriptionRequired: 'Beschreibung wird benötigt',
-    descriptionLessThan30Chars: 'Beschreibung muss kürzer als 100 Zeichen sein'
-  },
-  projectTypeRules: {
-    projectTypeRequired: 'Projekttyp wird benötigt'
+  description: {
+    required: 'Beschreibung wird benötigt'
   },
   fileFormatRules: {
     fileFormatRequired: 'Dateiformat wird benötigt'
   },
   uploadFileRules: {
     fileRequired: 'Datei(en) werden benötigt',
-    fileLessThan1MB: 'Dateigröße muss kleiner als 1 MB sein!'
+    fileLessThan1MB: 'Dateigröße muss kleiner als 100 MB sein!'
   },
   passwordRules: {
     passwordRequired: 'Passwort wird benötigt',

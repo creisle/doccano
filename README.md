@@ -49,7 +49,9 @@ By default, SQLite 3 is used for the default database. If you want to use Postgr
 ```bash
 pip install 'doccano[postgresql]'
 ```
+
 and set `DATABASE_URL` environment variable according to your PostgreSQL credentials:
+
 ```bash
 DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
 ```
@@ -96,8 +98,13 @@ docker container start doccano
 
 Go to <http://127.0.0.1:8000/>.
 
-To stop the container, run `docker container stop doccano -t 5`.
-All data created in the container will persist across restarts.
+To stop the container, run `docker container stop doccano -t 5`. All data created in the container will persist across restarts.
+
+If you want to use the latest features, please specify `nightly` tag:
+
+```bash
+docker pull doccano/doccano:nightly
+```
 
 ### Docker Compose
 

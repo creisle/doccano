@@ -56,7 +56,7 @@ def run_on_nix(args):
         "workers": args.workers,
         "chdir": base,
         "capture_output": True,
-        "loglevel": "debug",
+        "loglevel": "info",
     }
     StandaloneApplication(options).run()
 
@@ -66,7 +66,7 @@ def run_on_windows(args):
 
     from config.wsgi import application
 
-    serve(application, port=args.port)
+    serve(application, port=args.port, threads=args.workers)
 
 
 def command_db_init(args):
@@ -110,6 +110,18 @@ def command_run_task_queue(args):
     app.worker_main(argv=argv)
 
 
+def command_run_flower(args):
+    print("Starting flower.")
+    argv = [
+        "--app=config",
+        "--workdir={}".format(base),
+        "flower",
+    ]
+    if args.basic_auth:
+        argv.append("--basic_auth={}".format(args.basic_auth))
+    app.worker_main(argv=argv)
+
+
 def command_help(args):
     print(parser.parse_args([args.command, "--help"]))
 
@@ -146,6 +158,11 @@ def main():
     parser_queue.add_argument("--env_file", type=str, help="read in a file of environment variables")
     parser_queue.set_defaults(handler=command_run_task_queue)
 
+    parser_flower = subparsers.add_parser("flower", help="see `flower -h`")
+    parser_flower.add_argument("--env_file", type=str, help="read in a file of environment variables")
+    parser_flower.add_argument("--basic_auth", type=str, help="username and password for basic authentication")
+    parser_flower.set_defaults(handler=command_run_flower)
+
     # Create a parser for help.
     parser_help = subparsers.add_parser("help", help="see `help -h`")
     parser_help.add_argument("command", help="command name which help is shown")
@@ -153,7 +170,7 @@ def main():
 
     # Dispatch handler.
     args = parser.parse_args()
-    if hasattr(args, "env_file"):
+    if hasattr(args, "env_file") and Path(args.env_file).is_file():
         env.read_env(args.env_file, recurse=False, override=True)
     if hasattr(args, "handler"):
         django.setup()
