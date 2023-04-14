@@ -11,6 +11,10 @@
     font-size: 1rem;
 }
 
+.example-markup .example * {
+    white-space: normal;
+}
+
 .example-markup table td {
     padding: 5px;
 }
@@ -20,7 +24,7 @@
 }
 
 /* bottom border of the table*/
-.example-markup table tr:not(:last-child) * {
+.example-markup table tr:not(:last-child) td {
     border-bottom: thin solid rgba(0, 0, 0, 0.12);
 }
 
@@ -43,4 +47,27 @@
 
 .example-markup h2 {
     margin-bottom: 20px;
+}
+
+.ad_info table {
+    font-size: 1rem;
+}
+
+.ad_info table tr td:last-child .chip {
+    display: inline-block;
+    padding: 0 1rem;
+    height: 2rem;
+    font-size: 1rem;
+    line-height: 2rem;
+    border-radius: 25px;
+    background-color: #f1f1f1;
+    margin: 2px 0;
+}
+
+.ad_info table th:first-child {
+    min-width: 10rem;
+}
+
+.ad_info table th:nth-child(2) {
+    min-width: 6rem;
 }
