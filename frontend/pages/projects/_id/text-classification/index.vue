@@ -47,6 +47,8 @@
 
 <script>
 import { ref, toRefs, useContext, useFetch, watch } from '@nuxtjs/composition-api'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import LayoutText from '@/components/tasks/layout/LayoutText'
 import ListMetadata from '@/components/tasks/metadata/ListMetadata'
 import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
@@ -59,8 +61,6 @@ import { useExampleItem } from '@/composables/useExampleItem'
 import { useLabelList } from '@/composables/useLabelList'
 import { useProjectItem } from '@/composables/useProjectItem'
 import { useTeacherList } from '@/composables/useTeacherList'
-import { marked } from 'marked'
-import DOMPurify from 'dompurify'
 
 import '@/assets/style/example.css'
 
