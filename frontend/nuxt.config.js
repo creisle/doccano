@@ -179,9 +179,7 @@ export default {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: [
-              ['@babel/preset-env', { targets: "defaults" }]
-            ],
+            presets: [['@babel/preset-env', { targets: 'defaults' }]],
             plugins: ['@babel/plugin-proposal-nullish-coalescing-operator']
           }
         }
