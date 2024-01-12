@@ -51,6 +51,8 @@ jobs:
           node-version: "16"
       - name: Install Yarn
         run: npm install -g yarn
+      - name: configure git
+        run: git config --global url."https://github".insteadOf git://github
       - name: Install npm modules
         run: yarn install
       - name: Lint
