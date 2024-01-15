@@ -1,20 +1,34 @@
 <template>
   <layout-text v-if="example.id">
     <template #header>
-      <toolbar-laptop :doc-id="example.id" :enable-auto-labeling.sync="enableAutoLabeling"
-        :guideline-text="project.guideline" :is-reviewd="example.isConfirmed" :total="totalExample"
-        class="d-none d-sm-block" @click:clear-label="clear(example.id)" @click:review="confirm(projectId)" />
+      <toolbar-laptop
+        :doc-id="example.id"
+        :enable-auto-labeling.sync="enableAutoLabeling"
+        :guideline-text="project.guideline"
+        :is-reviewd="example.isConfirmed"
+        :total="totalExample"
+        class="d-none d-sm-block"
+        @click:clear-label="clear(example.id)"
+        @click:review="confirm(projectId)"
+      />
       <toolbar-mobile :total="totalExample" class="d-flex d-sm-none" />
     </template>
     <template #content>
       <v-card class="mb-5">
-        <v-card-text class="highlight example-markup" style="white-space: pre-wrap" v-html="exampleHtml" />
+        <v-card-text
+          class="highlight example-markup"
+          style="white-space: pre-wrap"
+          v-html="exampleHtml"
+        />
         <!-- <v-card-text class="title text-pre-wrap">{{ example.text }}</v-card-text> -->
       </v-card>
-      <seq2seq-box :text="example.text" :annotations="labels"
+      <seq2seq-box
+        :text="example.text"
+        :annotations="labels"
         @delete:annotation="(labelId) => remove(example.id, labelId)"
         @update:annotation="(labelId, text) => update(example.id, labelId, text)"
-        @create:annotation="(text) => add(example.id, text)" />
+        @create:annotation="(text) => add(example.id, text)"
+      />
     </template>
     <template #sidebar>
       <annotation-progress :progress="progress" />
