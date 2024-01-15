@@ -2,7 +2,7 @@ version: "3.7"
 services:
 
   backend:
-    image: doccano/doccano:backend
+    image: creisle/doccano:backend
     volumes:
       - static_volume:/backend/staticfiles
       - media:/backend/media
@@ -23,11 +23,11 @@ services:
       - network-frontend
 
   celery:
-    image: doccano/doccano:backend
+    image: creisle/doccano:backend
     volumes:
       - media:/backend/media
       - tmp_file:/backend/filepond-temp-uploads
-    entrypoint: ["/opt/bin/prod-celery.sh"]
+    entrypoint: [ "/opt/bin/prod-celery.sh" ]
     environment:
       PYTHONUNBUFFERED: "1"
       CELERY_BROKER_URL: "amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq"
@@ -40,8 +40,8 @@ services:
       - network-backend
 
   flower:
-    image: doccano/doccano:backend
-    entrypoint: ["/opt/bin/prod-flower.sh"]
+    image: creisle/doccano:backend
+    entrypoint: [ "/opt/bin/prod-flower.sh" ]
     environment:
       PYTHONUNBUFFERED: "1"
       CELERY_BROKER_URL: "amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq"
@@ -67,14 +67,9 @@ services:
       - network-backend
 
   nginx:
-    image: doccano/doccano:frontend
+    image: creisle/doccano:frontend
     command: >
-      /bin/sh -c
-      "envsubst '
-      $${WORKER_PROCESSES}
-      '< /etc/nginx/nginx.conf.template
-      > /etc/nginx/nginx.conf
-      && nginx -g 'daemon off;'"
+      /bin/sh -c "envsubst ' $${WORKER_PROCESSES} '< /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
     environment:
       API_URL: "http://backend:8000"
       GOOGLE_TRACKING_ID: ""
@@ -105,6 +100,7 @@ volumes:
   static_volume:
   media:
   tmp_file:
+
 
 networks:
   network-backend:
