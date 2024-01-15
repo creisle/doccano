@@ -1,3 +1,9 @@
+export interface Assignment {
+  id: string
+  assignee: string
+  assignee_id: number
+}
+
 export class ExampleItem {
   constructor(
     readonly id: number,
@@ -7,12 +13,16 @@ export class ExampleItem {
     readonly commentCount: number,
     readonly fileUrl: string,
     readonly isConfirmed: boolean,
-    readonly filename: string
+    readonly filename: string,
+    readonly assignments: Assignment[]
   ) {}
 
   get url() {
-    const l = this.fileUrl.indexOf('media/')
-    return this.fileUrl.slice(l - 1)
+    const l = this.fileUrl.indexOf('/media/')
+    if (l < 0) {
+      return this.fileUrl
+    }
+    return this.fileUrl.slice(l)
   }
 }
 

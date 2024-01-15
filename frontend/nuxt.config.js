@@ -174,6 +174,16 @@ export default {
           name: '[path][name].[ext]'
         }
       })
+      config.module.rules.push({
+        test: /flatten-js.*\.mjs$/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [['@babel/preset-env', { targets: 'defaults' }]],
+            plugins: ['@babel/plugin-proposal-nullish-coalescing-operator']
+          }
+        }
+      })
     }
   }
 }

@@ -18,6 +18,8 @@ import { useProjectItem } from '@/composables/useProjectItem'
 export default {
   layout: 'project',
 
+  middleware: ['check-auth', 'auth', 'setCurrentProject'],
+
   validate({ params }) {
     return /^\d+$/.test(params.id)
   },
