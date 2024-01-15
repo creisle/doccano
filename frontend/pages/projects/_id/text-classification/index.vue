@@ -64,7 +64,6 @@ import { useTeacherList } from '@/composables/useTeacherList'
 
 import '@/assets/style/example.css'
 
-
 export default {
   components: {
     AnnotationProgress,
