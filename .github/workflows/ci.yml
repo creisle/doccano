@@ -49,6 +49,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
+      - name: configue git
+        run: git config --global url."https://github.com/".insteadOf git://github.com/
       - name: Install Yarn
         run: npm install -g yarn
       - name: Install npm modules
