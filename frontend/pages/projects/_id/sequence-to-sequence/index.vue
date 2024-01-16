@@ -1,17 +1,33 @@
 <template>
   <layout-text v-if="doc.id">
     <template #header>
-      <toolbar-laptop :doc-id="doc.id" :enable-auto-labeling.sync="enableAutoLabeling" :guideline-text="project.guideline"
-        :is-reviewd="doc.isConfirmed" :total="docs.count" class="d-none d-sm-block" @click:clear-label="clear"
-        @click:review="confirm" />
+      <toolbar-laptop
+        :doc-id="doc.id"
+        :enable-auto-labeling.sync="enableAutoLabeling"
+        :guideline-text="project.guideline"
+        :is-reviewd="doc.isConfirmed"
+        :total="docs.count"
+        class="d-none d-sm-block"
+        @click:clear-label="clear"
+        @click:review="confirm"
+      />
       <toolbar-mobile :total="docs.count" class="d-flex d-sm-none" />
     </template>
     <template #content>
       <v-card class="mb-5">
-        <v-card-text class="highlight example-markup" style="white-space: pre-wrap" v-html="exampleHtml" />
+        <v-card-text
+          class="highlight example-markup"
+          style="white-space: pre-wrap"
+          v-html="exampleHtml"
+        />
       </v-card>
-      <seq2seq-box :text="doc.text" :annotations="annotations" @delete:annotation="remove" @update:annotation="update"
-        @create:annotation="add" />
+      <seq2seq-box
+        :text="doc.text"
+        :annotations="annotations"
+        @delete:annotation="remove"
+        @update:annotation="update"
+        @create:annotation="add"
+      />
     </template>
     <template #sidebar>
       <annotation-progress :progress="progress" />
