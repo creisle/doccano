@@ -99,6 +99,9 @@ export default {
       } else {
         return this.docs.items[0]
       }
+    },
+    exampleHtml() {
+      return DOMPurify.sanitize(marked.parse(this.example.text))
     }
   },
 
@@ -158,11 +161,6 @@ export default {
       await this.$services.example.confirm(this.projectId, this.doc.id)
       await this.$fetch()
       this.updateProgress()
-    }
-  },
-  computed: {
-    exampleHtml() {
-      return DOMPurify.sanitize(marked.parse(this.example.text))
     }
   }
 }
