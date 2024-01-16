@@ -15,7 +15,11 @@
     </template>
     <template #content>
       <v-card class="mb-5">
-        <v-card-text class="title text-pre-wrap">{{ example.text }}</v-card-text>
+        <v-card-text
+          class="highlight example-markup"
+          style="white-space: pre-wrap"
+          v-html="exampleHtml"
+        />
       </v-card>
       <seq2seq-box
         :text="example.text"
@@ -34,6 +38,8 @@
 
 <script>
 import { ref, toRefs, useContext, useFetch, watch } from '@nuxtjs/composition-api'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import LayoutText from '@/components/tasks/layout/LayoutText'
 import ListMetadata from '@/components/tasks/metadata/ListMetadata'
 import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
@@ -43,6 +49,8 @@ import Seq2seqBox from '~/components/tasks/seq2seq/Seq2seqBox'
 import { useExampleItem } from '~/composables/useExampleItem'
 import { useProjectItem } from '~/composables/useProjectItem'
 import { useTextLabel } from '~/composables/useTextLabel'
+
+import '@/assets/style/example.css'
 
 export default {
   components: {
@@ -109,6 +117,11 @@ export default {
       confirm,
       enableAutoLabeling,
       projectId
+    }
+  },
+  computed: {
+    exampleHtml() {
+      return DOMPurify.sanitize(marked.parse(this.example.text))
     }
   }
 }
