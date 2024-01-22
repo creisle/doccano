@@ -101,7 +101,7 @@ export default {
       }
     },
     exampleHtml() {
-      return DOMPurify.sanitize(marked.parse(this.example.text))
+      return DOMPurify.sanitize(marked.parse(this.doc.text))
     }
   },
 
@@ -117,7 +117,7 @@ export default {
 
   async created() {
     this.project = await this.$services.project.findById(this.projectId)
-    this.progress = await this.$$repositories.metrics.fetchMyProgress(this.projectId)
+    this.progress = await this.$repositories.metrics.fetchMyProgress(this.projectId)
   },
 
   methods: {
