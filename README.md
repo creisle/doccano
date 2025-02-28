@@ -63,8 +63,8 @@ After installation, run the following commands:
 doccano init
 # Create a super user.
 doccano createuser --username admin --password pass
-# Start a web server.
-doccano webserver --port 8000
+# Start a web server. debug env variable is required to avoid cors errors when testing locally but should not be used in any production deployments
+DEBUG=1 doccano webserver --port 8000
 ```
 
 In another terminal, run the following command:

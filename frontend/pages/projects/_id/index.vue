@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title> Welcome to the {{ project.name }} project </v-card-title>
     <v-card-text
-      class="highlight example-markup"
+      class="highlight context-markup"
       style="white-space: pre-wrap"
       v-html="guidelineHtml"
     />

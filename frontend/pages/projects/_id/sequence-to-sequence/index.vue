@@ -16,7 +16,7 @@
     <template #content>
       <v-card class="mb-5">
         <v-card-text
-          class="highlight example-markup"
+          class="highlight context-markup"
           style="white-space: pre-wrap"
           v-html="exampleHtml"
         />
@@ -47,7 +47,7 @@ import ToolbarLaptop from '@/components/tasks/toolbar/ToolbarLaptop'
 import ToolbarMobile from '@/components/tasks/toolbar/ToolbarMobile'
 import Seq2seqBox from '~/components/tasks/seq2seq/Seq2seqBox'
 
-import '@/assets/style/example.css'
+import '@/assets/style/context.css'
 
 export default {
   components: {

@@ -25,6 +25,12 @@
           />
         </v-card-title>
         <v-divider />
+        <v-card-text
+          class="highlight context-markup"
+          style="white-space: pre-wrap"
+          v-html="contextHtml"
+        />
+        <v-divider />
         <div class="annotation-text pa-4">
           <entity-editor
             :dark="$vuetify.theme.dark"
@@ -47,6 +53,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
+
 import LayoutText from '@/components/tasks/layout/LayoutText'
 import ListMetadata from '@/components/tasks/metadata/ListMetadata'
 import EntityEditor from '@/components/tasks/sequenceLabeling/EntityEditor.vue'
@@ -55,6 +64,8 @@ import LabelGroup from '@/components/tasks/textClassification/LabelGroup'
 import ToolbarLaptop from '@/components/tasks/toolbar/ToolbarLaptop'
 import ToolbarMobile from '@/components/tasks/toolbar/ToolbarMobile'
 import { Category } from '~/domain/models/tasks/category'
+
+import '@/assets/style/context.css'
 
 export default {
   components: {
@@ -121,6 +132,11 @@ export default {
       } else {
         return this.docs.items[0]
       }
+    },
+
+    contextHtml() {
+      console.log(this.doc.meta)
+      return DOMPurify.sanitize(marked.parse(this.doc.meta.contextHtml || ''))
     }
   },
 

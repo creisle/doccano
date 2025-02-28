@@ -1,4 +1,4 @@
-.example-markup table {
+.context-markup table {
     margin: 0;
     min-width: 400px;
     max-width: 100%;
@@ -11,41 +11,41 @@
     font-size: 1rem;
 }
 
-.example-markup .example * {
+.context-markup .example * {
     white-space: normal;
 }
 
-.example-markup table td {
+.context-markup table td {
     padding: 5px;
 }
 
-.example-markup table th {
+.context-markup table th {
     font-size: 1rem;
 }
 
 /* bottom border of the table*/
-.example-markup table tr:not(:last-child) td {
+.context-markup table tr:not(:last-child) td {
     border-bottom: thin solid rgba(0, 0, 0, 0.12);
 }
 
 /*round the table corners*/
-.example-markup table tr:first-child td:first-child {
+.context-markup table tr:first-child td:first-child {
     border-top-left-radius: 4px;
 }
 
-.example-markup table tr:first-child td:last-child {
+.context-markup table tr:first-child td:last-child {
     border-top-right-radius: 4px;
 }
 
-.example-markup table tr:last-child td:first-child {
+.context-markup table tr:last-child td:first-child {
     border-bottom-left-radius: 4px;
 }
 
-.example-markup table tr:last-child td:last-child {
+.context-markup table tr:last-child td:last-child {
     border-bottom-right-radius: 4px;
 }
 
-.example-markup h2 {
+.context-markup h2 {
     margin-bottom: 20px;
 }
 

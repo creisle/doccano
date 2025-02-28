@@ -32,7 +32,7 @@
         </v-card-title>
         <v-divider />
         <v-card-text
-          class="highlight example-markup"
+          class="highlight context-markup"
           style="white-space: pre-wrap"
           v-html="exampleHtml"
         />
@@ -62,7 +62,7 @@ import { useLabelList } from '@/composables/useLabelList'
 import { useProjectItem } from '@/composables/useProjectItem'
 import { useTeacherList } from '@/composables/useTeacherList'
 
-import '@/assets/style/example.css'
+import '@/assets/style/context.css'
 
 export default {
   components: {

@@ -62,9 +62,8 @@ def run_on_nix(args):
 
 
 def run_on_windows(args):
-    from waitress import serve
-
     from config.wsgi import application
+    from waitress import serve
 
     serve(application, port=args.port, threads=args.workers)
 
@@ -170,7 +169,7 @@ def main():
 
     # Dispatch handler.
     args = parser.parse_args()
-    if hasattr(args, "env_file") and Path(args.env_file).is_file():
+    if hasattr(args, "env_file") and args.env_file and Path(args.env_file).is_file():
         env.read_env(args.env_file, recurse=False, override=True)
     if hasattr(args, "handler"):
         django.setup()
