@@ -14,13 +14,7 @@
       <toolbar-mobile :total="docs.count" class="d-flex d-sm-none" />
     </template>
     <template #content>
-      <v-card class="mb-5">
-        <v-card-text
-          class="highlight context-markup"
-          style="white-space: pre-wrap"
-          v-html="exampleHtml"
-        />
-      </v-card>
+      <context-metadata :text="doc.meta.contextHtml" />
       <seq2seq-box
         :text="doc.text"
         :annotations="annotations"
@@ -38,22 +32,20 @@
 
 <script>
 import _ from 'lodash'
-import { marked } from 'marked'
-import DOMPurify from 'dompurify'
 import LayoutText from '@/components/tasks/layout/LayoutText'
+import ContextMetadata from '@/components/tasks/metadata/ContextMetadata'
 import ListMetadata from '@/components/tasks/metadata/ListMetadata'
 import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
 import ToolbarLaptop from '@/components/tasks/toolbar/ToolbarLaptop'
 import ToolbarMobile from '@/components/tasks/toolbar/ToolbarMobile'
 import Seq2seqBox from '~/components/tasks/seq2seq/Seq2seqBox'
 
-import '@/assets/style/context.css'
-
 export default {
   components: {
     AnnotationProgress,
     LayoutText,
     ListMetadata,
+    ContextMetadata,
     Seq2seqBox,
     ToolbarLaptop,
     ToolbarMobile
@@ -99,9 +91,6 @@ export default {
       } else {
         return this.docs.items[0]
       }
-    },
-    exampleHtml() {
-      return DOMPurify.sanitize(marked.parse(this.doc.text))
     }
   },
 

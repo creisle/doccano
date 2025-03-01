@@ -14,6 +14,7 @@
       <toolbar-mobile :total="docs.count" class="d-flex d-sm-none" />
     </template>
     <template #content>
+      <context-metadata :text="doc.meta.contextHtml" />
       <v-card>
         <div class="annotation-text pa-4">
           <entity-editor
@@ -91,6 +92,8 @@ import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import LayoutText from '@/components/tasks/layout/LayoutText'
 import ListMetadata from '@/components/tasks/metadata/ListMetadata'
+import ContextMetadata from '@/components/tasks/metadata/ContextMetadata'
+
 import EntityEditor from '@/components/tasks/sequenceLabeling/EntityEditor.vue'
 import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
 import ToolbarLaptop from '@/components/tasks/toolbar/ToolbarLaptop'
@@ -102,6 +105,7 @@ export default {
     EntityEditor,
     LayoutText,
     ListMetadata,
+    ContextMetadata,
     ToolbarLaptop,
     ToolbarMobile
   },

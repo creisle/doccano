@@ -31,11 +31,7 @@
           />
         </v-card-title>
         <v-divider />
-        <v-card-text
-          class="highlight context-markup"
-          style="white-space: pre-wrap"
-          v-html="exampleHtml"
-        />
+        <context-metadata :text="example.text" />
       </v-card>
     </template>
     <template #sidebar>
@@ -47,10 +43,9 @@
 
 <script>
 import { ref, toRefs, useContext, useFetch, watch } from '@nuxtjs/composition-api'
-import { marked } from 'marked'
-import DOMPurify from 'dompurify'
 import LayoutText from '@/components/tasks/layout/LayoutText'
 import ListMetadata from '@/components/tasks/metadata/ListMetadata'
+import ContextMetadata from '@/components/tasks/metadata/ContextMetadata'
 import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
 import LabelGroup from '@/components/tasks/textClassification/LabelGroup'
 import LabelSelect from '@/components/tasks/textClassification/LabelSelect'
@@ -62,12 +57,11 @@ import { useLabelList } from '@/composables/useLabelList'
 import { useProjectItem } from '@/composables/useProjectItem'
 import { useTeacherList } from '@/composables/useTeacherList'
 
-import '@/assets/style/context.css'
-
 export default {
   components: {
     AnnotationProgress,
     ButtonLabelSwitch,
+    ContextMetadata,
     LabelGroup,
     LabelSelect,
     LayoutText,
@@ -136,13 +130,7 @@ export default {
       enableAutoLabeling,
       labelComponent,
       removeTeacher,
-      shortKeys,
-      marked
-    }
-  },
-  computed: {
-    exampleHtml() {
-      return DOMPurify.sanitize(marked.parse(this.example.text))
+      shortKeys
     }
   }
 }
