@@ -1,0 +1,80 @@
+.context-markup table {
+    margin: 0;
+    min-width: 400px;
+    max-width: 100%;
+    border-spacing: 0;
+    padding: 10px;
+    line-height: 2rem;
+    /* color: rgba(0, 0, 0, 0.6) */
+    text-align: left;
+    box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+    font-size: 1rem;
+}
+
+.context-markup .example * {
+    white-space: normal;
+}
+
+.context-markup table td {
+    padding: 5px;
+}
+
+.context-markup table th {
+    font-size: 1rem;
+}
+
+/* bottom border of the table*/
+.context-markup table tr:not(:last-child) td {
+    border-bottom: thin solid rgba(0, 0, 0, 0.12);
+}
+
+/*round the table corners*/
+.context-markup table tr:first-child td:first-child {
+    border-top-left-radius: 4px;
+}
+
+.context-markup table tr:first-child td:last-child {
+    border-top-right-radius: 4px;
+}
+
+.context-markup table tr:last-child td:first-child {
+    border-bottom-left-radius: 4px;
+}
+
+.context-markup table tr:last-child td:last-child {
+    border-bottom-right-radius: 4px;
+}
+
+.context-markup h2 {
+    margin-bottom: 20px;
+}
+
+.ad_info {
+    margin-bottom: 20px;
+}
+
+.ad_info table {
+    font-size: 1rem;
+}
+
+.ad_info table tr td:last-child .chip {
+    display: inline-block;
+    padding: 0 1rem;
+    height: 2rem;
+    font-size: 1rem;
+    line-height: 2rem;
+    border-radius: 25px;
+    background-color: #f1f1f1;
+    margin: 2px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ad_info table th:first-child {
+    min-width: 10rem;
+}
+
+.ad_info table th:nth-child(2) {
+    min-width: 6rem;
+}

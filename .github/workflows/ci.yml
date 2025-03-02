@@ -48,7 +48,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: "18"
+      - name: configue git
+        run: git config --global url."https://github.com/".insteadOf git://github.com/
       - name: Install Yarn
         run: npm install -g yarn
       - name: Install npm modules

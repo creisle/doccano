@@ -1,11 +1,9 @@
 name: ci
 
 on:
-  schedule:
-    - cron: '0 10 * * *' # everyday at 10am
-  push:
-    tags:
-      - 'v*.*.*'
+    push:
+      branches:
+        - master
 
 jobs:
   docker:
@@ -18,7 +16,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: doccano/doccano
+          images: creisle/doccano
           tag-semver: |
             {{version}}
             {{major}}.{{minor}}
@@ -54,7 +52,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           file: ./docker/Dockerfile.prod
           push: ${{ github.event_name != 'pull_request' }}
-          tags: doccano/doccano:backend
+          tags: creisle/doccano:backend
           labels: ${{ steps.docker_meta.outputs.labels }}
 
       - name: Build a frontend image and push
@@ -64,5 +62,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           file: ./docker/Dockerfile.nginx
           push: ${{ github.event_name != 'pull_request' }}
-          tags: doccano/doccano:frontend
+          tags: creisle/doccano:frontend
           labels: ${{ steps.docker_meta.outputs.labels }}

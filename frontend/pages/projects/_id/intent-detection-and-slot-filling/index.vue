@@ -25,6 +25,8 @@
           />
         </v-card-title>
         <v-divider />
+        <context-metadata :text="doc.meta.contextHtml" />
+        <v-divider />
         <div class="annotation-text pa-4">
           <entity-editor
             :dark="$vuetify.theme.dark"
@@ -47,8 +49,11 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+
 import LayoutText from '@/components/tasks/layout/LayoutText'
 import ListMetadata from '@/components/tasks/metadata/ListMetadata'
+import ContextMetadata from '@/components/tasks/metadata/ContextMetadata'
+
 import EntityEditor from '@/components/tasks/sequenceLabeling/EntityEditor.vue'
 import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
 import LabelGroup from '@/components/tasks/textClassification/LabelGroup'
@@ -62,6 +67,7 @@ export default {
     EntityEditor,
     LayoutText,
     ListMetadata,
+    ContextMetadata,
     LabelGroup,
     ToolbarLaptop,
     ToolbarMobile

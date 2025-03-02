@@ -35,6 +35,10 @@ __pycache__/
 
 # C extensions
 *.so
+env.sh
+
+*/.venv
+*/node_modules
 
 # Distribution / packaging
 .Python

@@ -31,7 +31,7 @@
           />
         </v-card-title>
         <v-divider />
-        <v-card-text class="title highlight" style="white-space: pre-wrap" v-text="example.text" />
+        <context-metadata :text="example.text" />
       </v-card>
     </template>
     <template #sidebar>
@@ -45,6 +45,7 @@
 import { ref, toRefs, useContext, useFetch, watch } from '@nuxtjs/composition-api'
 import LayoutText from '@/components/tasks/layout/LayoutText'
 import ListMetadata from '@/components/tasks/metadata/ListMetadata'
+import ContextMetadata from '@/components/tasks/metadata/ContextMetadata'
 import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
 import LabelGroup from '@/components/tasks/textClassification/LabelGroup'
 import LabelSelect from '@/components/tasks/textClassification/LabelSelect'
@@ -60,6 +61,7 @@ export default {
   components: {
     AnnotationProgress,
     ButtonLabelSwitch,
+    ContextMetadata,
     LabelGroup,
     LabelSelect,
     LayoutText,

@@ -65,7 +65,17 @@ export default Vue.extend({
 
   methods: {
     async list() {
-      this.comments = await this.$repositories.comment.list(this.$route.params.id, this.exampleId)
+      const comments = await this.$repositories.comment.list(this.$route.params.id, this.exampleId)
+
+      // make sure the current user information has been fetched before filtering the comments
+      if (!this.user.username) {
+        this.user = await this.$repositories.user.getProfile()
+      }
+
+      // only see your own comments unless you are an admin user
+      this.comments = comments.filter(
+        (comment) => this.user.isStaff || comment.username === this.user.username
+      )
     },
     async add(message: string) {
       await this.$repositories.comment.create(this.$route.params.id, this.exampleId, message)

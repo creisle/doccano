@@ -56,10 +56,12 @@ export default Vue.extend({
     metaArray() {
       const items = []
       for (const [key, value] of Object.entries(this.metadata)) {
-        items.push({
-          key,
-          value
-        })
+        if (key !== 'contextHtml') {
+          items.push({
+            key,
+            value
+          })
+        }
       }
       return items
     }

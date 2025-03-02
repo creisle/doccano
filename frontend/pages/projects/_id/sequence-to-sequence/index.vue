@@ -14,9 +14,7 @@
       <toolbar-mobile :total="totalExample" class="d-flex d-sm-none" />
     </template>
     <template #content>
-      <v-card class="mb-5">
-        <v-card-text class="title text-pre-wrap">{{ example.text }}</v-card-text>
-      </v-card>
+      <context-metadata :text="doc.meta.contextHtml" />
       <seq2seq-box
         :text="example.text"
         :annotations="labels"
@@ -35,6 +33,7 @@
 <script>
 import { ref, toRefs, useContext, useFetch, watch } from '@nuxtjs/composition-api'
 import LayoutText from '@/components/tasks/layout/LayoutText'
+import ContextMetadata from '@/components/tasks/metadata/ContextMetadata'
 import ListMetadata from '@/components/tasks/metadata/ListMetadata'
 import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vue'
 import ToolbarLaptop from '@/components/tasks/toolbar/ToolbarLaptop'
@@ -49,6 +48,7 @@ export default {
     AnnotationProgress,
     LayoutText,
     ListMetadata,
+    ContextMetadata,
     Seq2seqBox,
     ToolbarLaptop,
     ToolbarMobile
