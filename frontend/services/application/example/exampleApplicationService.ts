@@ -26,7 +26,7 @@ export class ExampleApplicationService {
     const options: SearchOption = {
       limit: '1',
       offset,
-      q,
+      q: q || '',
       isChecked,
       ordering
     }
