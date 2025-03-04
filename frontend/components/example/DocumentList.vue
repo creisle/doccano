@@ -39,7 +39,7 @@
       <span class="d-none d-sm-flex">{{ item.text | truncate(200) }}</span>
     </template>
     <template #[`item.meta`]="{ item }">
-      {{ JSON.stringify(item.meta, null, 4) }}
+      {{ JSON.stringify(item.meta, null, 4) | truncate(200) }}
     </template>
     <template #[`item.assignee`]="{ item }">
       <v-combobox
