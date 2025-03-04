@@ -16,7 +16,7 @@ class ExampleList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated & (IsProjectAdmin | IsProjectStaffAndReadOnly)]
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     ordering_fields = ("created_at", "updated_at", "score")
-    search_fields = ("text", "filename")
+    search_fields = ("text", "filename", "meta")
     model = Example
     filterset_class = ExampleFilter
 
