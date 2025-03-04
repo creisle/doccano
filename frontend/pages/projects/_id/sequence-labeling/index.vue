@@ -14,7 +14,6 @@
       <toolbar-mobile :total="docs.count" class="d-flex d-sm-none" />
     </template>
     <template #content>
-      <context-metadata :text="doc.meta.contextHtml" />
       <v-card>
         <div class="annotation-text pa-4">
           <entity-editor
@@ -38,6 +37,7 @@
           />
         </div>
       </v-card>
+      <context-metadata :text="doc.meta.contextHtml" />
     </template>
     <template #sidebar>
       <annotation-progress :progress="progress" />
