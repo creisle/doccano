@@ -64,6 +64,8 @@
   "devDependencies": {
     "@babel/core": "^7.14.8",
     "@babel/eslint-parser": "^7.14.7",
+    "@babel/helper-function-name": "^7.24.7",
+    "@babel/helper-hoist-variables": "^7.24.7",
     "@babel/preset-env": "^7.15.8",
     "@mdi/js": "^6.5.95",
     "@nuxt/types": "^2.16.0",
@@ -73,7 +75,9 @@
     "@nuxtjs/eslint-module": "^2.0.0",
     "@nuxtjs/google-analytics": "^2.4.0",
     "@nuxtjs/google-fonts": "^2.0.0",
+    "@types/dompurify": "^3.2.0",
     "@types/lodash": "^4.14.171",
+    "@types/marked": "^6.0.0",
     "@types/uuid": "^8.3.4",
     "@types/wavesurfer.js": "^5.1.0",
     "@vue/test-utils": "^1.2.2",
