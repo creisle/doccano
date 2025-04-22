@@ -33,7 +33,8 @@ COPY backend/pyproject.toml backend/poetry.lock /tmp/
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN pip install -U --no-cache-dir pip==22.2.2
-RUN curl -sSL https://install.python-poetry.org | python -
+# RUN curl -sSL https://install.python-poetry.org | python -
+RUN pip install poetry
 RUN export PATH="/root/.local/bin:$PATH"
 RUN poetry export --without-hashes -o /requirements.txt \
    && echo "psycopg2-binary==2.8.6" >> /requirements.txt \
