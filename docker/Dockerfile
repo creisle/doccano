@@ -6,6 +6,7 @@ COPY frontend/ /frontend/
 WORKDIR /frontend
 ENV PUBLIC_PATH="/static/_nuxt/"
 # hadolint ignore=DL3008
+RUN set -ex
 RUN apt-get update \
    && apt-get install -y --no-install-recommends git python3 make g++ ca-certificates \
    && git config --global url."https://github.com/".insteadOf git://github.com/ \
@@ -34,9 +35,9 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN pip install -U --no-cache-dir pip==22.2.2
 # RUN curl -sSL https://install.python-poetry.org | python -
-RUN pip install poetry
-RUN export PATH="/root/.local/bin:$PATH"
-RUN poetry export --without-hashes -o /requirements.txt \
+RUN pip install poetry==1.8.5 && \
+   export PATH="/root/.local/bin:$PATH" \
+   && poetry export --without-hashes -o /requirements.txt \
    && echo "psycopg2-binary==2.8.6" >> /requirements.txt \
    && echo "django-heroku==0.3.1" >> /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt
