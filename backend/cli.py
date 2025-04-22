@@ -62,8 +62,9 @@ def run_on_nix(args):
 
 
 def run_on_windows(args):
-    from config.wsgi import application
     from waitress import serve
+
+    from config.wsgi import application
 
     serve(application, port=args.port, threads=args.workers)
 
