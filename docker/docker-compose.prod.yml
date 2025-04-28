@@ -14,8 +14,9 @@ services:
       CELERY_BROKER_URL: "amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq"
       DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable"
       ALLOW_SIGNUP: "False"
-      DEBUG: "False"
+      DEBUG: "True"
       DJANGO_SETTINGS_MODULE: "config.settings.production"
+      CSRF_TRUSTED_ORIGINS: "${CSRF_TRUSTED_ORIGINS}"
     depends_on:
       - postgres
     networks:
@@ -83,7 +84,7 @@ services:
       - static_volume:/static
       - media:/media
     ports:
-      - 80:8080
+      - 8000:8080
     depends_on:
       - backend
     networks:
