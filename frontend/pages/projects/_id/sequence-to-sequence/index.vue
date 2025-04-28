@@ -14,7 +14,7 @@
       <toolbar-mobile :total="totalExample" class="d-flex d-sm-none" />
     </template>
     <template #content>
-      <context-metadata :text="doc.meta.contextHtml" />
+      <context-metadata :text="example.text" />
       <seq2seq-box
         :text="example.text"
         :annotations="labels"
