@@ -25,6 +25,8 @@ import FormCreate from '@/components/comment/FormCreate.vue'
 import BaseCard from '@/components/utils/BaseCard.vue'
 import { CommentItem } from '~/domain/models/comment/comment'
 import { UserItem } from '~/domain/models/user/user'
+import { Project } from '~/domain/models/project/project'
+
 
 export default Vue.extend({
   components: {
@@ -43,7 +45,8 @@ export default Vue.extend({
   data() {
     return {
       user: {} as UserItem,
-      comments: [] as CommentItem[]
+      comments: [] as CommentItem[],
+      project: {} as Project
     }
   },
 
@@ -60,7 +63,8 @@ export default Vue.extend({
   },
 
   async created() {
-    this.user = await this.$repositories.user.getProfile()
+    this.user = await this.$repositories.user.getProfile();
+    this.project = await this.$services.project.findById(this.$route.params.id)
   },
 
   methods: {
@@ -71,10 +75,16 @@ export default Vue.extend({
       if (!this.user.username) {
         this.user = await this.$repositories.user.getProfile()
       }
+      if (!this.project.name) {
+        this.project = await this.$services.project.findById(this.$route.params.id)
+      }
 
-      // only see your own comments unless you are an admin user
       this.comments = comments.filter(
-        (comment) => this.user.isStaff || comment.username === this.user.username
+        (comment) => (
+          this.user.isStaff
+        || comment.username === this.user.username
+        || this.project.enableSharingMode
+    )
       )
     },
     async add(message: string) {
