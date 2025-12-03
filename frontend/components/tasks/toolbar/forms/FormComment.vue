@@ -27,7 +27,6 @@ import { CommentItem } from '~/domain/models/comment/comment'
 import { UserItem } from '~/domain/models/user/user'
 import { Project } from '~/domain/models/project/project'
 
-
 export default Vue.extend({
   components: {
     BaseCard,
@@ -63,7 +62,7 @@ export default Vue.extend({
   },
 
   async created() {
-    this.user = await this.$repositories.user.getProfile();
+    this.user = await this.$repositories.user.getProfile()
     this.project = await this.$services.project.findById(this.$route.params.id)
   },
 
@@ -80,11 +79,10 @@ export default Vue.extend({
       }
 
       this.comments = comments.filter(
-        (comment) => (
-          this.user.isStaff
-        || comment.username === this.user.username
-        || this.project.enableSharingMode
-    )
+        (comment) =>
+          this.user.isStaff ||
+          comment.username === this.user.username ||
+          this.project.enableSharingMode
       )
     },
     async add(message: string) {
